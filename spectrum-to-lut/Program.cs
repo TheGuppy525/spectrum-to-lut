@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Tga;
 using SixLabors.ImageSharp.PixelFormats;
@@ -25,15 +26,17 @@ namespace spectrum_to_lut
                 outputPath = args[1];
             }
 
-            Image<Rgba32> spectrum = Image.Load<Rgba32>(inputPath);
-            Image<Rgba32> spectrumRef = Image.Load<Rgba32>(spectrumRefPath);
-            Image<Rgba32> cubeRef = Image.Load<Rgba32>(cubeRefPath);
+            Image<Rgb24> spectrum = Image.Load<Rgb24>(inputPath);
+            Image<Rgb24> spectrumRef = Image.Load<Rgb24>(spectrumRefPath);
+            Image<Rgb24> cubeRef = Image.Load<Rgb24>(cubeRefPath);
 
             if (spectrumRef.Width != spectrum.Width)
             {
                 Console.Write("Width mismatch between input and reference spectrum");
                 return;
             }
+            
+            Image<Rgb24> cube = new Image<Rgb24>(1024, 32);
             
             for (int i = 0; i < WIDTH; i++)
             {
@@ -54,17 +57,16 @@ namespace spectrum_to_lut
                         Rgb cubePixel = cubeRef[w, h];
                         var cubeHsv = ColorSpaceConverter.ToHsv(in cubePixel);
                         float cubeHue = cubeHsv.H;
-
-                        if (Math.Abs(refHue - cubeHue) < 1)
+                        
+                        if (Math.Abs(refHue - cubeHue) < 0.5)
                         {
-                            cubeRef[w, h] = ColorSpaceConverter.ToRgb(new Hsv((cubeHue+hueShift), cubeHsv.V, cubeHsv.S));
+                            cube[w, h] = ColorSpaceConverter.ToRgb(new Hsv((cubeHue+hueShift), cubeHsv.S, cubeHsv.V));
                         }
                     }
                 }
-                Console.WriteLine(spectrumHue.ToString());
             }
-            cubeRef.SaveAsPng(outputPath);
+            cube.SaveAsPng(outputPath);
 
         }
     }
-}
+} 
