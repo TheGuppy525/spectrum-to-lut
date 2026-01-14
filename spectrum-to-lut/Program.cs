@@ -60,7 +60,9 @@ namespace spectrum_to_lut
                         
                         if (Math.Abs(refHue - cubeHue) < 0.5)
                         {
-                            cube[w, h] = ColorSpaceConverter.ToRgb(new Hsv((cubeHue+hueShift), cubeHsv.S, cubeHsv.V));
+                            var saturationShift = (spectrumHsv.S - cubeHsv.S);
+                            
+                            cube[w, h] = ColorSpaceConverter.ToRgb(new Hsv((cubeHue+hueShift), (cubeHsv.S+saturationShift), cubeHsv.V));
                         }
                     }
                 }
