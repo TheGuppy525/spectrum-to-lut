@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using System.Runtime;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Tga;
 using SixLabors.ImageSharp.PixelFormats;
@@ -14,12 +15,11 @@ namespace spectrum_to_lut
     {
         static void Main(string[] args)
         {
-            int WIDTH = 2048;
-            
             string inputPath = "input.png";
             string outputPath = "output.png";
             string spectrumRefPath = "spectrumRef.png";
             string cubeRefPath = "cubeRef.png";
+            
             if (args.Length == 2)
             { 
                 inputPath = args[0];
@@ -38,9 +38,9 @@ namespace spectrum_to_lut
             
             Image<Rgb24> cube = new Image<Rgb24>(1024, 32);
             
-            for (int i = 0; i < WIDTH; i++)
+            for (int i = 0; i < spectrumRef.Width; i++)
             {
-                Rgb refPixel = spectrumRef[i, 0]; 
+                Rgb refPixel = spectrumRef[i, 0];   
                 Rgb spectrumPixel = spectrum[i, 0];
                 
                 var refHsv = ColorSpaceConverter.ToHsv(in refPixel);
@@ -58,11 +58,18 @@ namespace spectrum_to_lut
                         var cubeHsv = ColorSpaceConverter.ToHsv(in cubePixel);
                         float cubeHue = cubeHsv.H;
                         
-                        if (Math.Abs(refHue - cubeHue) < 0.5)
+                        if (Math.Abs(refHue - cubeHue) < 0.2)
                         {
-                            var saturationShift = (spectrumHsv.S - cubeHsv.S);
                             
-                            cube[w, h] = ColorSpaceConverter.ToRgb(new Hsv((cubeHue+hueShift), (cubeHsv.S+saturationShift), cubeHsv.V));
+                            float valueShift = 0;
+                            float saturationShift = 0;
+                            if (cubeHsv.S != 0)
+                            {
+                                valueShift = Math.Clamp((spectrumHsv.V - cubeHsv.V), -1, 0);
+                                saturationShift = Math.Clamp((spectrumHsv.S - cubeHsv.S), -1, 0);
+                            }
+
+                            cube[w, h] = ColorSpaceConverter.ToRgb(new Hsv((cubeHue+hueShift), (cubeHsv.S+saturationShift), (cubeHsv.V+valueShift)));
                         }
                     }
                 }
