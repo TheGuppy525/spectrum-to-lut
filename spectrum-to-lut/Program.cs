@@ -65,8 +65,8 @@ namespace spectrum_to_lut
                             float saturationShift = 0;
                             if (cubeHsv.S != 0)
                             {
-                                valueShift = Math.Clamp((spectrumHsv.V - cubeHsv.V), -1, 0);
                                 saturationShift = Math.Clamp((spectrumHsv.S - cubeHsv.S), -1, 0);
+                                valueShift = (Math.Clamp((spectrumHsv.V - cubeHsv.V), -1, 0) * cubeHsv.S);
                             }
 
                             cube[w, h] = ColorSpaceConverter.ToRgb(new Hsv((cubeHue+hueShift), (cubeHsv.S+saturationShift), (cubeHsv.V+valueShift)));
