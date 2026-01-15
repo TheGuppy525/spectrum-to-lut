@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("spectrum-to-lut")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ee8da7d19828164d07336e8f8cf05c1913ed58ca")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d95d6a1bbd0d5f1951ec94fd7bf5797cbdac91e1")]
 [assembly: System.Reflection.AssemblyProductAttribute("spectrum-to-lut")]
 [assembly: System.Reflection.AssemblyTitleAttribute("spectrum-to-lut")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

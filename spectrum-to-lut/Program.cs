@@ -20,10 +20,22 @@ namespace spectrum_to_lut
             string spectrumRefPath = "spectrumRef.png";
             string cubeRefPath = "cubeRef.png";
             
-            if (args.Length == 2)
+           /* if (args.Length == 2)
             { 
                 inputPath = args[0];
                 outputPath = args[1];
+            } */
+
+            int yOffset = 0;
+
+            for (int i = 0; i < args.Length; i++)
+            {
+                switch (args[i])
+                {
+                    case "-yoffset":
+                        yOffset =  Convert.ToInt32(args[i+1]);
+                        break;
+                }
             }
 
             Image<Rgb24> spectrum = Image.Load<Rgb24>(inputPath);
@@ -41,7 +53,7 @@ namespace spectrum_to_lut
             for (int i = 0; i < spectrumRef.Width; i++)
             {
                 Rgb refPixel = spectrumRef[i, 0];   
-                Rgb spectrumPixel = spectrum[i, 0];
+                Rgb spectrumPixel = spectrum[i, yOffset];
                 
                 var refHsv = ColorSpaceConverter.ToHsv(in refPixel);
                 float refHue = refHsv.H;
