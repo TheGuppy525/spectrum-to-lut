@@ -27,7 +27,7 @@ namespace spectrum_to_lut
             {
                 switch (args[i])
                 {
-                    case "-yoffset":
+                    case "-offset":
                         yOffset =  Convert.ToInt32(args[i+1]);
                         break;
                     
