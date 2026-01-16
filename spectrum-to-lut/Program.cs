@@ -50,54 +50,10 @@ namespace spectrum_to_lut
             var spectrumRef = SpectrumTools.GenerateReferenceSpectrum(spectrum.Width);
             var cubeRef = SpectrumTools.GenerateReferenceCube(lutSize);
             
-
-            if (spectrumRef.Width != spectrum.Width)
-            {
-                Console.Write("Width mismatch between input and reference spectrum");
-                return;
-            }
+            // Generate 3d texture lut
+            var lut = SpectrumTools.ApplySpectrum(cubeRef, spectrumRef, spectrum, yOffset);
             
-            Image<Rgb24> cube = new Image<Rgb24>(lutSize*lutSize, lutSize);
-            
-            for (int i = 0; i < spectrumRef.Width; i++)
-            {
-                Rgb refPixel = spectrumRef[i, 0];   
-                Rgb spectrumPixel = spectrum[i, yOffset];
-                
-                var refHsv = ColorSpaceConverter.ToHsv(in refPixel);
-                float refHue = refHsv.H;
-                var spectrumHsv = ColorSpaceConverter.ToHsv(in spectrumPixel);
-                float spectrumHue = spectrumHsv.H;
-                float hueShift = (spectrumHue - refHue);
-                
-                for (int h = 0; h < cubeRef.Height; h++)
-                {
-                    for (int w = 0; w < cubeRef.Width; w++)
-                    {
-                        Rgb cubePixel = cubeRef[w, h];
-                        var cubeHsv = ColorSpaceConverter.ToHsv(in cubePixel);
-                        float cubeHue = cubeHsv.H;
-                        
-                        if (Math.Abs(refHue - cubeHue) < 0.2)
-                        {
-                            
-                            float valueShift = 0;
-                            float saturationShift = 0;
-                            if (cubeHsv.S != 0)
-                            {
-                                saturationShift = Math.Clamp((spectrumHsv.S - cubeHsv.S), -1, 0);
-                                valueShift = (Math.Clamp((spectrumHsv.V - cubeHsv.V), -1, 0) * cubeHsv.S);
-                            }
-
-                            cube[w, h] = ColorSpaceConverter.ToRgb(new Hsv((cubeHue+hueShift), (cubeHsv.S+saturationShift), (cubeHsv.V+valueShift)));
-                        }
-                    }
-                }
-                
-                Console.WriteLine("Pass[{0}/{1}]", i+1, spectrumRef.Width);
-            }
-            
-            cube.SaveAsPng(outputPath);
+            lut.SaveAsPng(outputPath);
             Console.WriteLine("\nDone!");
 
         }
