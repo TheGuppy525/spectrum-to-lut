@@ -15,15 +15,19 @@ public static class Cube
             sw.WriteLine("DOMAIN_MIN 0 0 0");
             sw.WriteLine("DOMAIN_MAX 1 1 1");
 
-            for (int y = 0; y < image.Height; y++)
+            for (int z = 0; z < size; z++)
             {
-                for (int x = 0; x < image.Width; x++)
+                for (int y = 0; y < size; y++)
                 {
-                    Rgb pixel = image[x, y];
+                    for (int x = 0; x < size; x++)
+                    {
+                        Rgb pixel = image[x+(size*z), y];
                     
-                    sw.WriteLine("{0} {1} {2}", pixel.R, pixel.G, pixel.B);
+                        sw.WriteLine("{0} {1} {2}", pixel.R, pixel.G, pixel.B);
+                    }
                 }
             }
+            
         }
     }
 }
