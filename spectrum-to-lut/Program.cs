@@ -34,13 +34,27 @@ namespace spectrum_to_lut
                         outputPath = args[i+1];
                         break;
                     
-                    case  "-size":
+                    case  "-s":
                         lutSize = Convert.ToInt32(args[i+1]);
                         break;
                     
                     case "-f":
                         format = args[i+1];
                         break;
+                    
+                    case "-help":
+                        Console.WriteLine($$"""
+                                               usage: spectrum-to-lut [options]
+                                               
+                                               options:
+                                                 -i, <path>         specifies input spectrum location
+                                                 -o, <path>         specifies output LUT location
+                                                 -s,                sets the size of the output lut
+                                                 -offset,           sets the vertical offset in pixels 
+                                                                    of the input spectrum top to bottom
+                                                 -f,                sets the output format                                 
+                                            """);
+                        return;
                 }
             }
             
