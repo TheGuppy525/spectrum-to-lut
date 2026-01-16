@@ -9,19 +9,23 @@ A good tool for creating hue spectrums was created for [Color in Color](https://
 # Usage
 ### 1. Specify input spectrum.
 `spectrum-to-lut -i [PATH]`
+
 Outputs a '.cube' file by default.
 
 ### 2. You can optionally specifiy and output file.
 `spectrum-to-lut -o [PATH]`
+
 Note that the file extension will be added automatically to the output path.
 
 ### 3. You can also specifiy the output format.
 `spectrum-to-lut -f [FORMAT]`
+
 Most common image formats are supported.
 
 ### 4. The size of the output LUT can be changed (default is 32).
 `spectrum-to-lut -s [SIZE]`
 
-### 5. A offset in pixels from the top of the input spectrum can be specified\n
-if you have multiple spectrums in your input file.
+### 5. A offset in pixels from the top of the input spectrum can be specified.
 `spectrum-to-lut -offset [PIXELS]`
+
+This is for if you have multiple spectra in your input file.
