@@ -1,12 +1,6 @@
-﻿using System;
-using System.Numerics;
-using System.Runtime;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Tga;
+﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.ColorSpaces;
-using SixLabors.ImageSharp.ColorSpaces.Conversion;
+
 
 
 namespace spectrum_to_lut
@@ -18,11 +12,12 @@ namespace spectrum_to_lut
             
             // Default args
             string inputPath = "input.png";
-            string outputPath = "output.png";
+            string outputPath = "output";
             int yOffset = 0;
             int lutSize = 32;
+            string format = "cube";
 
-            // Get args from user
+            // Set args
             for (int i = 0; i < args.Length; i++)
             {
                 switch (args[i])
@@ -42,20 +37,40 @@ namespace spectrum_to_lut
                     case  "-size":
                         lutSize = Convert.ToInt32(args[i+1]);
                         break;
+                    
+                    case "-f":
+                        format = args[i+1];
+                        break;
                 }
             }
-
-            // Load/generate required images
-            Image<Rgb24> spectrum = Image.Load<Rgb24>(inputPath);
-            var spectrumRef = SpectrumTools.GenerateReferenceSpectrum(spectrum.Width);
-            var cubeRef = SpectrumTools.GenerateReferenceCube(lutSize);
             
-            // Generate 3d texture lut
-            var lut = SpectrumTools.ApplySpectrum(cubeRef, spectrumRef, spectrum, yOffset);
+            // Check if input file exists
+            if (File.Exists(inputPath))
+            {
+                // Load/generate required images
+                Image<Rgb24> spectrum = Image.Load<Rgb24>(inputPath);
+                var spectrumRef = SpectrumTools.GenerateReferenceSpectrum(spectrum.Width);
+                var cubeRef = SpectrumTools.GenerateReferenceCube(lutSize);
             
-            lut.SaveAsPng(outputPath);
-            Console.WriteLine("\nDone!");
+                // Generate 3d texture lut
+                var lut = SpectrumTools.ApplySpectrum(cubeRef, spectrumRef, spectrum, yOffset);
 
+                switch (format)
+                {
+                    case "png":
+                        lut.SaveAsPng(outputPath + ".png");
+                        break;
+                    
+                    case "cube":
+                        Cube.SaveAsCube(lut, lutSize, outputPath + ".cube");
+                        break;
+                }
+                Console.WriteLine("\nDone!");
+            }
+            else
+            {
+                Console.WriteLine("Input Spectrum not found!");
+            }
         }
     }
 } 
