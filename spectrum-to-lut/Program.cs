@@ -54,7 +54,9 @@ namespace spectrum_to_lut
             
                 // Generate 3d texture lut
                 var lut = SpectrumTools.ApplySpectrum(cubeRef, spectrumRef, spectrum, yOffset);
-
+                
+                // Save LUT
+                Console.WriteLine("Saving LUT...");
                 switch (format)
                 {
                     case "png":
@@ -63,6 +65,30 @@ namespace spectrum_to_lut
                     
                     case "cube":
                         Cube.SaveAsCube(lut, lutSize, outputPath + ".cube");
+                        break;
+                    
+                    case "bmp":
+                        lut.SaveAsBmp(outputPath + ".bmp");
+                        break;
+                    
+                    case "jpeg" or "jpg":
+                        lut.SaveAsJpeg(outputPath + ".jpg");
+                        break;
+                    
+                    case "tga":
+                        lut.SaveAsTga(outputPath + ".tga");
+                        break;
+                    
+                    case "tiff":
+                        lut.SaveAsTiff(outputPath + ".tiff");
+                        break;
+                    
+                    case "webp":
+                        lut.SaveAsWebp(outputPath + ".webp");
+                        break;
+                    
+                    case "Qoi":
+                        lut.SaveAsQoi(outputPath + ".Qoi");
                         break;
                 }
                 Console.WriteLine("\nDone!");
